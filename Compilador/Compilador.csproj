@@ -6,4 +6,10 @@
     <UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="AnalisisSintatico\" />
+    <Folder Include="AnalisisSemantico\" />
+    <Folder Include="ManejadorErrores\" />
+  </ItemGroup>
+
 </Project>
