@@ -11,6 +11,8 @@ namespace Compilador.Transversal
         public int NumeroLinea { get; set; }
         public int PosicionInicial { get; set; }
         public int PosicionFinal { get; set; }
+        public TipoComponente Tipo { get; set;  }
+
 
     }
 }
