@@ -9,8 +9,6 @@
   <ItemGroup>
     <Folder Include="AnalisisSintatico\" />
     <Folder Include="AnalisisSemantico\" />
-    <Folder Include="ManejadorErrores\" />
-    <Folder Include="TablaSimbolos\" />
   </ItemGroup>
 
 </Project>

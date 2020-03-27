@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Compilador.TablaSimbolos
 {
-    public class TablaDummy
+    public class TablaDummys
     {
         private static Dictionary<string, List<ComponenteLexico>> simbolos = new Dictionary<string, List<ComponenteLexico>>();
 

@@ -13,6 +13,18 @@ namespace Compilador.Transversal
         public int PosicionFinal { get; set; }
         public TipoComponente Tipo { get; set;  }
 
-
+        public override string ToString()
+        {
+            StringBuilder retorno = new StringBuilder();
+            
+            retorno.Append("Tipo componente: " + Tipo.ToString() + "\n");
+            retorno.Append("Categoria: " + Categoria + "\n");
+            retorno.Append("Lexema: " + Lexema + "\n");
+            retorno.Append("Numero de Linea: " + NumeroLinea + "\n");
+            retorno.Append("Posicion Inicial: " + PosicionInicial + "\n");
+            retorno.Append("Poscicion Final: " + PosicionFinal + "\n");
+           
+            return base.ToString();
+        }
     }
 }

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Compilador.AnalisisLexico;
+using Compilador.Transversal;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -17,5 +19,19 @@ namespace Compilador
             InitializeComponent();
         }
 
+        //boton compilar
+        public void  CompilarButton_Click()
+        {
+            AnalizadorLexico anaLex = new AnalizadorLexico();
+            ComponenteLexico componente = anaLex.Analizar();
+
+            while (componente.Lexema.Equals("@EOF@"))
+            {
+                MessageBox.Show(componente.ToString());
+            }
+
+            //pintar tabla de simbolos, dummys y errores
+
+        }
     }
 }

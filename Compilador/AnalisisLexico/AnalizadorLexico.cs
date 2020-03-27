@@ -1,4 +1,6 @@
 ﻿using Compilador.Cache;
+using Compilador.ManejadorErrores;
+using Compilador.TablaSimbolos;
 using Compilador.Transversal;
 using System;
 
@@ -354,6 +356,9 @@ namespace Compilador.AnalisisLexico
                     componenteLexico.NumeroLinea = NumeroLineaActual;
                     componenteLexico.PosicionInicial = Puntero - lexema.Length;
                     componenteLexico.PosicionInicial = Puntero - 1;
+                    componenteLexico.Tipo = TipoComponente.SIMBOLO;
+
+                    TablaMaestra.SincronizarSimbolo(componenteLexico);
                 }
                 else if (estadoActual == 15)
                 {
@@ -380,12 +385,43 @@ namespace Compilador.AnalisisLexico
                 //estado de error
                 else if (estadoActual == 17)
                 {
+                    continuarAnalisis = false;
+                    DevolverPuntero();
+
+                    Error error = Error.CrearErrorLexico(
+                        lexema, 
+                        Categoria.NUMERO_DECIMAL, NumeroLineaActual, 
+                        Puntero-lexema.Length, Puntero-1, 
+                        "Numero decimal no válido", "Leí" + CaracterActual + "y esperaba un digito del cero al 9",
+                        "asegurese que el caracter que reciba sea un caracter del 0 al 9");
+
+                    GestorErrores.Reportar(error);
+
+                    componenteLexico = new ComponenteLexico();
+                    componenteLexico.Categoria = Categoria.NUMERO_DECIMAL;
+                    componenteLexico.Lexema = lexema + "0";
+                    componenteLexico.NumeroLinea = NumeroLineaActual;
+                    componenteLexico.PosicionInicial = Puntero - lexema.Length;
+                    componenteLexico.PosicionInicial = Puntero - 1;
+                    componenteLexico.Tipo = TipoComponente.DUMMY;
+
+                    TablaMaestra.SincronizarSimbolo(componenteLexico);
                     
+
                 }
                 //estado de error
                 else if (estadoActual == 18)
                 {
-                    
+                    Error error = Error.CrearErrorLexico(
+                        CaracterActual,
+                        Categoria.CARACTER_NO_VALIDO, NumeroLineaActual,
+                        Puntero -1, Puntero - 1,
+                        "Caracter no reconocido", "Leí" + CaracterActual,
+                        "Asegurese que el caracter sera valido");
+
+                    GestorErrores.Reportar(error);
+
+                    throw new Exception("Se ha presentado un error de tipo STOPPER durante el analisis lexico. Por favor verifique la consola de errores");
                 }
                 else if (estadoActual == 19)
                 {
