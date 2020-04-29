@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Compilador.ManejadorErrores
 {
-    public class GestorErrores
+    public static class GestorErrores
     {
         private static Dictionary<TipoError, List<Error>> errores = new Dictionary<TipoError, List<Error>>();
 
         public static List<Error> ObtenerErrores(TipoError tipoError)
         {
-            if(!errores.ContainsKey(tipoError))
+            if (!errores.ContainsKey(tipoError))
             {
                 errores.Add(tipoError, new List<Error>());
             }
@@ -21,7 +19,7 @@ namespace Compilador.ManejadorErrores
 
         public static void Reportar(Error error)
         {
-            if(error != null)
+            if (error != null)
             {
                 ObtenerErrores(error.Tipo).Add(error);
             }
@@ -51,6 +49,5 @@ namespace Compilador.ManejadorErrores
         {
             return ObtenerTodosErrores().Count > 0;
         }
-
     }
 }

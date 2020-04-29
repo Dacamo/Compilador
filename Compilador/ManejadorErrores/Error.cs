@@ -1,7 +1,4 @@
 ﻿using Compilador.Transversal;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Compilador.ManejadorErrores
 {
@@ -9,12 +6,12 @@ namespace Compilador.ManejadorErrores
     {
         public string Falla { get; set; }
         public string Causa { get; set; }
-        public string Solucion { get; set;}
+        public string Solucion { get; set; }
         public TipoError Tipo { get; set; }
 
-        private Error (string lexema, Categoria categoria, int numeroLinea, int posicionInicial, int posicionFinal, string falla, string causa, string solucion, TipoError tipoError) 
+        private Error(string lexema, Categoria categoria, int numeroLinea, int posicionInicial, int posicionFinal, string falla, string causa, string solucion, TipoError tipoError)
         {
-            Categoria = Categoria;
+            Categoria = categoria;
             Lexema = lexema;
             PosicionFinal = posicionFinal;
             PosicionInicial = posicionFinal;
@@ -23,7 +20,6 @@ namespace Compilador.ManejadorErrores
             Causa = causa;
             Solucion = solucion;
             Tipo = tipoError;
-
         }
 
         public static Error CrearErrorLexico(string lexema, Categoria categoria, int numeroLinea, int posicionInicial, int posicionFinal, string falla, string causa, string solucion)
@@ -40,8 +36,6 @@ namespace Compilador.ManejadorErrores
         {
             return new Error(lexema, categoria, numeroLinea, posicionInicial, posicionFinal, falla, causa, solucion, TipoError.SEMANTICO);
         }
-
-
 
     }
 }
