@@ -1,12 +1,10 @@
 ﻿using Compilador.Transversal;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Compilador.TablaSimbolos
 {
-    public class TablaDummys
+    public static class TablaDummys
     {
         private static Dictionary<string, List<ComponenteLexico>> simbolos = new Dictionary<string, List<ComponenteLexico>>();
 

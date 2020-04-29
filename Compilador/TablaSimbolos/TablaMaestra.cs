@@ -1,23 +1,20 @@
 ﻿using Compilador.Transversal;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Compilador.TablaSimbolos
 {
-    public class TablaMaestra
+    public static class TablaMaestra
     {
-        public static void SincronizarSimbolo (ComponenteLexico componente)
+        public static void SincronizarSimbolo(ComponenteLexico componente)
         {
-            if(componente != null)
+            if (componente != null)
             {
-                switch(componente.Tipo)
+                switch (componente.Tipo)
                 {
                     case TipoComponente.DUMMY:
-                        TablaSimbolos.Agregar(componente);
+                        TablaDummys.Agregar(componente);
                         break;
                     case TipoComponente.SIMBOLO:
-                        TablaDummys.Agregar(componente);
+                        TablaSimbolos.Agregar(componente);
                         break;
                 }
             }
