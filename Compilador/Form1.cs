@@ -1,4 +1,5 @@
-﻿using Compilador.Clases;
+﻿using Compilador.AnalizadorSintactico;
+using Compilador.Clases;
 using Compilador.TablaSimbolos;
 using Compilador.Transversal;
 using System;
@@ -108,18 +109,16 @@ namespace Compilador
                 contadorLineas++;
             }
             registroCarga.Text = lineaInicial.ToString();
-
-
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             try
             {
-                AnalizadorLexico anaLex = new AnalizadorLexico();
+                //AnalizadorLexico anaLex = new AnalizadorLexico();
+                AnalizadorSintactico AnaSin = new AnalizadorSintactico();
                 TablaPalabrasReservadas.inicializar();
-                anaLex.Analizar();
-
+                AnaSin.analizar();
                 CrearPestañaDeComponentes();
                 CrearPestañaDeErrores();
                 CrearPestañaDePalabrasReservadas();
