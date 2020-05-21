@@ -1,4 +1,4 @@
-﻿using Compilador.AnalizadorSintactico;
+﻿
 using Compilador.Clases;
 using Compilador.TablaSimbolos;
 using Compilador.Transversal;
@@ -19,10 +19,7 @@ namespace Compilador
         {
             InitializeComponent();
             textBoxRuta.Enabled = false;       
-            
-            
-
-            
+                
         }
 
         private void label1_Click(object sender, EventArgs e)
@@ -115,20 +112,24 @@ namespace Compilador
         {
             try
             {
-                //AnalizadorLexico anaLex = new AnalizadorLexico();
-                AnalizadorSintactico AnaSin = new AnalizadorSintactico();
                 TablaPalabrasReservadas.inicializar();
-                AnaSin.analizar();
+                //AnalizadorLexico anaLex = new AnalizadorLexico();
+                //ComponenteLexico componete = anaLex.Analizar();
+                AnalizadorSintactico anaSin = new AnalizadorSintactico();
+                anaSin.analizar();
+                
                 CrearPestañaDeComponentes();
                 CrearPestañaDeErrores();
                 CrearPestañaDePalabrasReservadas();
                 CrearPestañaDeLiterales();
+
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
             
+
         }
 
         private void Tabla_Componentes_Click(object sender, EventArgs e)

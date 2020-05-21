@@ -1,10 +1,6 @@
 ﻿using Compilador.ManejadorErrores;
 using Compilador.Transversal;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Compilador
@@ -28,7 +24,7 @@ namespace Compilador
             {
                 MessageBox.Show("El programa contiene errores. Por favor verifique la consola respectiva...");
             }
-            else if ("@EOF@".Equals(componente.Categoria))
+            else if (Categoria.EOF.Equals(componente.Categoria))
             {
                 MessageBox.Show("El Programa se encuentra bien escrito...");
             }
@@ -40,7 +36,7 @@ namespace Compilador
             MessageBox.Show("Ruta de evalucion de la gramatica: \n" + traza);
         }
 
-        //<SumaResta> := <MultDiv><CSumaResta>|<multdiv>
+        //<SumaResta> := <MultDiv><CSumaResta>
         private void SumaResta(string posicion)
         {
             posicion = posicion + "----";
@@ -52,7 +48,7 @@ namespace Compilador
 
        
 
-        // <MultDiv> := <Resto><CMulDiv>
+        // <MultDiv> := <Resto><CMultDiv>
         private void MultDiv(string posicion)
         {
             posicion = posicion + "----";
@@ -62,18 +58,18 @@ namespace Compilador
             FormarTrazaSalida(posicion, "MultDiv");
         }
 
-        // <CSumaResta> := +<SumaResta> | -<SumaResta> | Epsilon
+        // <CSumaResta> := +<SumaResta>|-<SumaResta>|Epsilon
         private void CSumaResta(string posicion)
         {
             posicion = posicion + "----";
             FormarTrazaEntrada(posicion, "CSumaResta");
-            if ("SUMA".Equals(componente.Categoria))
+            if (Categoria.SUMA.Equals(componente.Categoria))
             {
                 LeerSiguienteComponente();
                 SumaResta(posicion);
                 //Sumar los numeros
             }
-            else if ("RESTA".Equals(componente.Categoria))
+            else if (Categoria.RESTA.Equals(componente.Categoria))
             {
                 LeerSiguienteComponente();
                 SumaResta(posicion);
@@ -87,18 +83,18 @@ namespace Compilador
         }
 
        
-        //<CMUlDiv> := <
+        //<CMultDiv> := *<MultDiv>|/<MultDiv>|Epsilon
         private void CMultDiv(string posicion)
         {
             posicion = posicion + "----";
             FormarTrazaEntrada(posicion, "CMultDiv");
-            if ("MULTIPLICACION".Equals(componente.Categoria))
+            if (Categoria.MULTIPLICACION.Equals(componente.Categoria))
             {
                 LeerSiguienteComponente();
                 MultDiv(posicion);
                 //Multiplicar los numeros
             }
-            else if ("DIVISION".Equals(componente.Categoria))
+            else if (Categoria.DIVISION.Equals(componente.Categoria))
             {
                 LeerSiguienteComponente();
                 MultDiv(posicion);
@@ -111,32 +107,32 @@ namespace Compilador
 
             FormarTrazaSalida(posicion, "CMultDiv");
         }
-        //<Resto> := ENTERO|DECIMAL | (<SumaResta>)
+        //<Resto> := ENTERO|DECIMAL|(<SumaResta>)
         private void Resto(string posicion)
         {
             posicion = posicion + "----";
             FormarTrazaEntrada(posicion, "Resto");
-            if ("ENTERO".Equals(componente.Categoria))
+            if (Categoria.ENTERO.Equals(componente.Categoria))
             {
                 LeerSiguienteComponente();
                 //convertir el dato a entenro
             }
-            else if ("DECIMAL".Equals(componente.Categoria))
+            else if (Categoria.NUMERO_DECIMAL.Equals(componente.Categoria))
             {
+                LeerSiguienteComponente();
                 //convertir el dato a deciaml
             }
-            else if ("PARENTESIS_ABRE".Equals(componente.Categoria))
+            else if (Categoria.PARENTESIS_ABRE.Equals(componente.Categoria))
             {
                 LeerSiguienteComponente();
                 SumaResta(posicion);
-                if ("PARENTESIS_CIERRA".Equals(componente.Categoria))
+                if (Categoria.PARENTESIS_CIERRA.Equals(componente.Categoria))
                 {
-                    LeerSiguienteComponente();
-                    SumaResta(posicion);
+                    LeerSiguienteComponente();     
                 }
                 else
                 {
-                    //Reportar un error
+                    //Reportar un error sintáctico
                     Error error = Error.CrearErrorSintatico(
                         componente.Lexema,
                         componente.Categoria,
