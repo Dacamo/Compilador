@@ -327,7 +327,7 @@ namespace Compilador
                     continuarAnalisis = false;
                     componenteLexico = ComponenteLexico.crear(lexema, Categoria.EOF, NumeroLineaActual, Puntero - lexema.Length, Puntero - 1);
                     componenteLexico.Tipo = TipoComponente.SIMBOLO; 
-                    TablaMaestra.SincronizarSimbolo(componenteLexico);
+                    //TablaMaestra.SincronizarSimbolo(componenteLexico);
                     limpiarLexema();
                 }
                 //cargar nueva linea

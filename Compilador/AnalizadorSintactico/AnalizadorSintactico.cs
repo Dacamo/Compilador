@@ -1,6 +1,7 @@
 ﻿using Compilador.ManejadorErrores;
 using Compilador.Transversal;
 using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace Compilador
@@ -10,12 +11,14 @@ namespace Compilador
         private AnalizadorLexico anaLex = new AnalizadorLexico();
         private ComponenteLexico componente = null;
         private string traza = "";
-        private bool mostrarTraza = true;
+        private bool mostrarTraza = false;
+        private Stack<double> pila = new Stack<double>();
 
 
         public void analizar()
         {
             traza = "";
+            pila.Clear();
             LeerSiguienteComponente();
             SumaResta("--");
 
@@ -26,7 +29,16 @@ namespace Compilador
             }
             else if (Categoria.EOF.Equals(componente.Categoria))
             {
-                MessageBox.Show("El Programa se encuentra bien escrito...");
+                if(pila.Count == 1)
+                {
+                    MessageBox.Show("El Programa se encuentra bien escrito...");
+                    MessageBox.Show("El resultado de la operación es: " + pila.Pop());
+                }
+                else
+                {
+                    MessageBox.Show("El programa se encuentra bien escrito pero faltaron numeros por evaluar...");
+                }
+                
             }
             else
             {
@@ -58,7 +70,7 @@ namespace Compilador
             FormarTrazaSalida(posicion, "MultDiv");
         }
 
-        // <CSumaResta> := +<SumaResta>|-<SumaResta>|Epsilon
+        // <CSumaResta> := +<SumaResta>{PUSH({POP-2}+{POP-1})}|-<SumaResta>{PUSH({POP-2}-{POP-1})}|Epsilon
         private void CSumaResta(string posicion)
         {
             posicion = posicion + "----";
@@ -68,12 +80,22 @@ namespace Compilador
                 LeerSiguienteComponente();
                 SumaResta(posicion);
                 //Sumar los numeros
+                {
+                    double derecho = pila.Pop();
+                    double izquierdo = pila.Pop();
+                    pila.Push(izquierdo + derecho);
+                }
             }
             else if (Categoria.RESTA.Equals(componente.Categoria))
             {
                 LeerSiguienteComponente();
                 SumaResta(posicion);
                 //Restar los numeros
+                {
+                    double derecho = pila.Pop();
+                    double izquierdo = pila.Pop();
+                    pila.Push(izquierdo - derecho);
+                }
             }
             else
             {
@@ -82,8 +104,8 @@ namespace Compilador
             FormarTrazaSalida(posicion, "CSumaResta");
         }
 
-       
-        //<CMultDiv> := *<MultDiv>|/<MultDiv>|Epsilon
+
+        //<CMultDiv> := *<MultDiv>{PUSH({POP-2}*{POP-1})}|/<MultDiv>{PUSH({POP-2}/{POP-1})}|Epsilon
         private void CMultDiv(string posicion)
         {
             posicion = posicion + "----";
@@ -93,12 +115,38 @@ namespace Compilador
                 LeerSiguienteComponente();
                 MultDiv(posicion);
                 //Multiplicar los numeros
+                {
+                    double derecho = pila.Pop();
+                    double izquierdo = pila.Pop();
+                    pila.Push(izquierdo * derecho);
+                }
             }
             else if (Categoria.DIVISION.Equals(componente.Categoria))
             {
                 LeerSiguienteComponente();
                 MultDiv(posicion);
                 //Dividir los numeros
+                {
+                    double derecho = pila.Pop();
+                    double izquierdo = pila.Pop();
+                    if(derecho == 0.0)
+                    {
+                        Error error = Error.CrearErrorSemantico(
+                       componente.Lexema,
+                       componente.Categoria,
+                       componente.NumeroLinea,
+                       componente.PosicionInicial,
+                       componente.PosicionFinal,
+                       "Division por 0",
+                       "se esta tratando de hacer una division por 0 ",
+                       "Asegurése que el numero sea diferente de 0");
+                        GestorErrores.Reportar(error);
+                        izquierdo = 1;
+                        derecho = 1;    
+                    }
+                    pila.Push(izquierdo / derecho);
+
+                }
             }
             else
             {
@@ -107,20 +155,22 @@ namespace Compilador
 
             FormarTrazaSalida(posicion, "CMultDiv");
         }
-        //<Resto> := ENTERO|DECIMAL|(<SumaResta>)
+        //<Resto> := ENTERO{PUSH}|DECIMAL{PUSH}|(<SumaResta>)
         private void Resto(string posicion)
         {
             posicion = posicion + "----";
             FormarTrazaEntrada(posicion, "Resto");
             if (Categoria.ENTERO.Equals(componente.Categoria))
             {
+                pila.Push(Convert.ToDouble(componente.Lexema));
                 LeerSiguienteComponente();
                 //convertir el dato a entenro
             }
             else if (Categoria.NUMERO_DECIMAL.Equals(componente.Categoria))
             {
+                pila.Push(Convert.ToDouble(componente.Lexema));
                 LeerSiguienteComponente();
-                //convertir el dato a deciaml
+                //convertir el dato a decimal
             }
             else if (Categoria.PARENTESIS_ABRE.Equals(componente.Categoria))
             {

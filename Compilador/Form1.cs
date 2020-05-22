@@ -112,9 +112,9 @@ namespace Compilador
         {
             try
             {
-                TablaPalabrasReservadas.inicializar();
                 //AnalizadorLexico anaLex = new AnalizadorLexico();
                 //ComponenteLexico componete = anaLex.Analizar();
+                TablaPalabrasReservadas.inicializar();
                 AnalizadorSintactico anaSin = new AnalizadorSintactico();
                 anaSin.analizar();
                 
